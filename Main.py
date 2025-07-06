@@ -120,9 +120,13 @@ class ChatBotApp:
                                  font=ctk.CTkFont(size=10),
                                  text_color="gray")
         time_label.grid(row=0, column=1, padx=10, pady=(10, 5), sticky="e")
+          # Message content with dynamic height
+        # Calculate approximate height based on content length and width
+        # Rough estimation: 80 chars per line, minimum 60px, add 20px per line
+        estimated_lines = max(1, len(content) // 80 + content.count('\n') + 1)
+        content_height = max(60, min(300, estimated_lines * 20 + 40))  # Min 60px, max 300px
         
-        # Message content
-        content_textbox = ctk.CTkTextbox(message_frame, height=80, wrap="word")
+        content_textbox = ctk.CTkTextbox(message_frame, height=content_height, wrap="word")
         content_textbox.grid(row=1, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 10))
         content_textbox.insert("1.0", content)
         content_textbox.configure(state="disabled")
