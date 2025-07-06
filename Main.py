@@ -15,7 +15,7 @@ class ChatBotApp:
         ctk.set_default_color_theme("blue")
 
         self.app = ctk.CTk()
-        self.app.title("Ollama AI Assistant - Professional Chat Interface")
+        self.app.title("Ollama AI Assistant")
         self.app.geometry("900x700")
         self.app.minsize(600, 500)
         
@@ -94,11 +94,12 @@ class ChatBotApp:
         self.clear_button.pack()
         
     def on_key_press(self, event):
-        # Send message on Ctrl+Enter
-        if event.keysym == "Return" and event.state & 0x4:  # Ctrl+Enter
+        if event.keysym == "Return":
+            if event.state & 0x1:  # Shift pressed
+                return
             self.generate_text()
             return "break"
-            
+
     def add_message(self, role, content):
         # Create message frame
         message_frame = ctk.CTkFrame(self.chat_display)
@@ -113,18 +114,27 @@ class ChatBotApp:
                                  font=ctk.CTkFont(size=12, weight="bold"),
                                  text_color=role_color)
         role_label.grid(row=0, column=0, padx=10, pady=(10, 5), sticky="w")
-        
-        # Timestamp
+          # Timestamp
         timestamp = datetime.now().strftime("%H:%M")
         time_label = ctk.CTkLabel(message_frame, text=timestamp, 
                                  font=ctk.CTkFont(size=10),
                                  text_color="gray")
         time_label.grid(row=0, column=1, padx=10, pady=(10, 5), sticky="e")
-          # Message content with dynamic height
-        # Calculate approximate height based on content length and width
-        # Rough estimation: 80 chars per line, minimum 60px, add 20px per line
-        estimated_lines = max(1, len(content) // 80 + content.count('\n') + 1)
-        content_height = max(60, min(300, estimated_lines * 20 + 40))  # Min 60px, max 300px
+          # Message content with compact auto-sizing
+        # Simple and accurate height calculation based on line count
+        lines = content.split('\n')
+        # Count actual lines plus estimate wrapped lines for long lines
+        total_lines = 0
+        for line in lines:
+            if len(line) == 0:
+                total_lines += 1  # Empty line
+            else:
+                # Rough estimate: 100 characters per line (more realistic for chat width)
+                estimated_wrapped = max(1, (len(line) + 99) // 100)
+                total_lines += estimated_wrapped
+        
+        # Calculate compact height: 18px per line + minimal padding
+        content_height = max(30, total_lines * 18 + 12)  # Minimum 30px, 18px per line + 12px padding
         
         content_textbox = ctk.CTkTextbox(message_frame, height=content_height, wrap="word")
         content_textbox.grid(row=1, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 10))
