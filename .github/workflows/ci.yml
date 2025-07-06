@@ -76,7 +76,7 @@ jobs:
         pip install black isort mypy
     
     - name: Check code formatting with Black
-      run: black --check . --exclude="/(\.git|\.venv|venv|env|__pycache__)/"
+      run: black . --exclude="/(\.git|\.venv|venv|env|__pycache__)/"
     
     - name: Check import sorting with isort
       run: isort --check-only . --skip-glob="*/.git/*" --skip-glob="*/.venv/*" --skip-glob="*/venv/*"
