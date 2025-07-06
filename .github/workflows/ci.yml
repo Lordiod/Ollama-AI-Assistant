@@ -79,7 +79,7 @@ jobs:
       run: black . --exclude="/(\.git|\.venv|venv|env|__pycache__)/"
     
     - name: Check import sorting with isort
-      run: isort --check-only . --skip-glob="*/.git/*" --skip-glob="*/.venv/*" --skip-glob="*/venv/*"
+      run: isort .
     
     - name: Type checking with mypy
       run: mypy . --ignore-missing-imports --exclude="/(\.git|\.venv|venv|env|__pycache__)/" || true
